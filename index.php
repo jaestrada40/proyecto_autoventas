@@ -45,7 +45,7 @@ $featured_vehicles = $featured->fetchAll();
     <?php endif; ?>
 
     <!-- Búsqueda y Vehículos -->
-    <h1 class="text-4xl font-bold text-center text-1E40AF my-12">Bienvenido a la Concesionaria</h1>
+    <h1 class="text-4xl font-bold text-center text-1E40AF my-12">Bienvenido a Autos MONTGOMERY</h1>
     <form action="<?php echo BASE_URL; ?>search.php" method="GET" class="mb-8 flex justify-center">
         <input type="text" name="query" placeholder="Buscar autos..." class="border p-3 rounded-l-lg w-full max-w-md focus:outline-none focus:border-F97316">
         <button type="submit" class="button rounded-r-lg">Buscar</button>
