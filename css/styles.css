@@ -432,7 +432,7 @@ footer {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 }
 
-/* Slider Styles */
+/* Slider Styles (Existente - Destacados) */
 .slider-container {
   position: relative;
   max-width: 1200px;
@@ -521,5 +521,113 @@ footer {
 }
 
 .slider-dot.active {
+  background: #f97316;
+}
+
+/* Menú de Marcas */
+.brand-menu {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  padding: 10px 0;
+  border-bottom: 1px solid #ccc;
+}
+
+.brand-filter {
+  text-decoration: none;
+  color: #1e40af;
+  font-weight: 600;
+  padding: 5px 15px;
+  cursor: pointer;
+}
+
+.brand-filter.active {
+  color: #f97316;
+  border-bottom: 2px solid #f97316;
+}
+
+/* Nuevo Slider (Por Marca) */
+.brand-slider-container {
+  position: relative;
+  max-width: 1200px;
+  margin: 0 auto;
+  overflow: hidden;
+  border-radius: 12px;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+}
+
+.brand-slider {
+  display: flex;
+  overflow: hidden;
+}
+
+.brand-slider-item {
+  min-width: 25%; /* 4 vehículos por pantalla */
+  box-sizing: border-box;
+  padding: 10px;
+  text-align: center;
+}
+
+.brand-slider-item img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.brand-slider-caption h2 {
+  font-size: 1.2rem;
+  margin: 10px 0;
+  color: #1e40af;
+}
+
+.brand-slider-nav {
+  position: absolute;
+  top: 50%;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  transform: translateY(-50%);
+}
+
+.brand-prev,
+.brand-next {
+  background: rgba(30, 64, 175, 0.8);
+  color: #ffffff;
+  border: none;
+  padding: 10px;
+  cursor: pointer;
+  font-size: 1.5rem;
+  transition: background-color 0.3s ease;
+}
+
+.brand-prev:hover,
+.brand-next:hover {
+  background: #f97316;
+}
+
+.brand-prev:disabled,
+.brand-next:disabled {
+  background: rgba(0, 0, 0, 0.2);
+  cursor: not-allowed;
+}
+
+.brand-slider-dots {
+  text-align: center;
+  margin-top: 10px;
+}
+
+.brand-slider-dot {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  background: #bbb;
+  border-radius: 50%;
+  margin: 0 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.brand-slider-dot.active {
   background: #f97316;
 }

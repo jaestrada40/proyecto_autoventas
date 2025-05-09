@@ -15,7 +15,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // Slider
+  // Slider Existente (Destacados)
   const slider = document.querySelector(".slider");
   const sliderItems = document.querySelectorAll(".slider-item");
   const prevButton = document.querySelector(".slider-nav .prev");
@@ -56,6 +56,114 @@ document.addEventListener("DOMContentLoaded", () => {
         currentIndex === sliderItems.length - 1 ? 0 : currentIndex + 1;
       updateSlider();
     }, 5000);
+  }
+
+  // Nuevo Slider (Por Marca)
+  let brandSliderItems = document.querySelectorAll(".brand-slider-item");
+  let brandSliderDots = document.querySelectorAll(".brand-slider-dot");
+  const brandPrevBtn = document.querySelector(".brand-prev");
+  const brandNextBtn = document.querySelector(".brand-next");
+  const brandFilters = document.querySelectorAll(".brand-filter");
+  let brandCurrentIndex = 0;
+  const itemsPerPage = 4;
+
+  function updateBrandSlider() {
+    const totalPages = Math.ceil(brandSliderItems.length / itemsPerPage);
+    brandSliderItems.forEach((item, index) => {
+      item.style.display = "none";
+      if (
+        index >= brandCurrentIndex &&
+        index < brandCurrentIndex + itemsPerPage
+      ) {
+        item.style.display = "block";
+      }
+    });
+    brandSliderDots.forEach((dot, index) => {
+      dot.classList.toggle(
+        "active",
+        index === Math.floor(brandCurrentIndex / itemsPerPage)
+      );
+    });
+    brandPrevBtn.disabled = brandCurrentIndex === 0;
+    brandNextBtn.disabled =
+      brandCurrentIndex >= (totalPages - 1) * itemsPerPage;
+  }
+
+  if (brandSliderItems.length > 0) {
+    brandPrevBtn.addEventListener("click", () => {
+      if (brandCurrentIndex > 0) {
+        brandCurrentIndex -= itemsPerPage;
+        updateBrandSlider();
+      }
+    });
+
+    brandNextBtn.addEventListener("click", () => {
+      if (brandCurrentIndex + itemsPerPage < brandSliderItems.length) {
+        brandCurrentIndex += itemsPerPage;
+        updateBrandSlider();
+      }
+    });
+
+    brandSliderDots.forEach((dot) => {
+      dot.addEventListener("click", () => {
+        const dotIndex = Array.from(brandSliderDots).indexOf(dot);
+        brandCurrentIndex = dotIndex * itemsPerPage;
+        updateBrandSlider();
+      });
+    });
+
+    // Filtrado por marca
+    brandFilters.forEach((filter) => {
+      filter.addEventListener("click", (e) => {
+        e.preventDefault();
+        brandFilters.forEach((f) => f.classList.remove("active"));
+        filter.classList.add("active");
+
+        const brand = filter.getAttribute("data-brand");
+        const filteredVehicles = brand
+          ? allVehicles.filter((v) => v.brand_name === brand)
+          : allVehicles;
+        const brandSlider = document.querySelector(".brand-slider");
+        brandSlider.innerHTML = "";
+
+        filteredVehicles.forEach((vehicle) => {
+          const item = document.createElement("div");
+          item.className = "brand-slider-item";
+          item.innerHTML = `
+            <img src="${BASE_URL}images/${vehicle.image}" alt="${vehicle.model_name}">
+            <div class="brand-slider-caption">
+              <h2>${vehicle.brand_name} ${vehicle.model_name}</h2>
+              <a href="${BASE_URL}cart.php?vehicle_id=${vehicle.id}" class="button mt-2 inline-block">Comprar</a>
+            </div>
+          `;
+          brandSlider.appendChild(item);
+        });
+
+        // Actualizar referencias después de regenerar el DOM
+        brandSliderItems = document.querySelectorAll(".brand-slider-item");
+        const totalItems = brandSliderItems.length;
+        const totalDots = Math.ceil(totalItems / itemsPerPage);
+        const dotsContainer = document.querySelector(".brand-slider-dots");
+        dotsContainer.innerHTML = "";
+        for (let i = 0; i < totalDots; i++) {
+          const dot = document.createElement("span");
+          dot.className = "brand-slider-dot " + (i === 0 ? "active" : "");
+          dot.addEventListener("click", () => {
+            brandCurrentIndex = i * itemsPerPage;
+            updateBrandSlider();
+          });
+          dotsContainer.appendChild(dot);
+        }
+        brandSliderDots = document.querySelectorAll(".brand-slider-dot");
+
+        brandCurrentIndex = 0;
+        updateBrandSlider();
+      });
+    });
+
+    // Inicializar el nuevo slider
+    updateBrandSlider();
+    brandFilters[0].click(); // Activar "Todas las marcas" al cargar
   }
 });
 

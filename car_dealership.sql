@@ -3,14 +3,13 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 09, 2025 at 06:24 AM
+-- Generation Time: May 09, 2025
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.0.30
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
 SET time_zone = "+00:00";
-
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -20,6 +19,32 @@ SET time_zone = "+00:00";
 --
 -- Database: `car_dealership`
 --
+DROP DATABASE IF EXISTS `car_dealership`;
+CREATE DATABASE IF NOT EXISTS `car_dealership` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
+USE `car_dealership`;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `brands`
+--
+
+CREATE TABLE `brands` (
+  `id` int(11) NOT NULL,
+  `name` varchar(50) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Indexes for table `brands`
+--
+ALTER TABLE `brands`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- AUTO_INCREMENT for table `brands`
+--
+ALTER TABLE `brands`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
 
 -- --------------------------------------------------------
 
@@ -33,13 +58,16 @@ CREATE TABLE `categories` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `categories`
+-- Indexes for table `categories`
 --
+ALTER TABLE `categories`
+  ADD PRIMARY KEY (`id`);
 
-INSERT INTO `categories` (`id`, `name`) VALUES
-(1, 'Sedán'),
-(2, 'SUV'),
-(3, 'Deportivo');
+--
+-- AUTO_INCREMENT for table `categories`
+--
+ALTER TABLE `categories`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 -- --------------------------------------------------------
 
@@ -56,12 +84,17 @@ CREATE TABLE `messages` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `messages`
+-- Indexes for table `messages`
 --
+ALTER TABLE `messages`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `user_id` (`user_id`);
 
-INSERT INTO `messages` (`id`, `user_id`, `subject`, `message`, `created_at`) VALUES
-(1, NULL, 'prueba', 'mensaje', '2025-05-09 00:53:04'),
-(2, 4, 'pruebaprueba', 'pruebaprueba', '2025-05-09 03:21:34');
+--
+-- AUTO_INCREMENT for table `messages`
+--
+ALTER TABLE `messages`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 -- --------------------------------------------------------
 
@@ -71,18 +104,24 @@ INSERT INTO `messages` (`id`, `user_id`, `subject`, `message`, `created_at`) VAL
 
 CREATE TABLE `models` (
   `id` int(11) NOT NULL,
+  `brand_id` int(11) DEFAULT NULL,
   `name` varchar(50) NOT NULL,
   `category_id` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `models`
+-- Indexes for table `models`
 --
+ALTER TABLE `models`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `brand_id` (`brand_id`),
+  ADD KEY `category_id` (`category_id`);
 
-INSERT INTO `models` (`id`, `name`, `category_id`) VALUES
-(1, 'Toyota Camry', 1),
-(2, 'Honda CR-V', 2),
-(3, 'Porsche 911', 3);
+--
+-- AUTO_INCREMENT for table `models`
+--
+ALTER TABLE `models`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 -- --------------------------------------------------------
 
@@ -100,16 +139,18 @@ CREATE TABLE `sales` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `sales`
+-- Indexes for table `sales`
 --
+ALTER TABLE `sales`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `user_id` (`user_id`),
+  ADD KEY `vehicle_id` (`vehicle_id`);
 
-INSERT INTO `sales` (`id`, `user_id`, `vehicle_id`, `quantity`, `total_price`, `sale_date`) VALUES
-(1, 4, 2, 1, 35000.00, '2025-05-08 23:46:10'),
-(2, 4, 2, 1, 35000.00, '2025-05-09 00:03:14'),
-(3, 4, 1, 1, 25000.00, '2025-05-09 01:23:49'),
-(4, 4, 1, 1, 25000.00, '2025-05-09 02:39:33'),
-(5, 4, 1, 1, 25000.00, '2025-05-09 02:51:03'),
-(6, 4, 2, 1, 35000.00, '2025-05-09 03:20:34');
+--
+-- AUTO_INCREMENT for table `sales`
+--
+ALTER TABLE `sales`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 -- --------------------------------------------------------
 
@@ -130,11 +171,18 @@ CREATE TABLE `users` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `users`
+-- Indexes for table `users`
 --
+ALTER TABLE `users`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `username` (`username`),
+  ADD UNIQUE KEY `email` (`email`);
 
-INSERT INTO `users` (`id`, `username`, `email`, `password`, `first_name`, `last_name`, `image`, `role`, `created_at`) VALUES
-(4, 'jaestradag', 'jaestradag@gmail.com', '$2y$10$Q5DaZgmoYxAgO9dUX2r49ufTtzWyD6t3Nig2vlr1OcB2ryf3e94DS', 'Javier', 'Estrada', 'man.png', 'admin', '2025-05-08 23:45:57');
+--
+-- AUTO_INCREMENT for table `users`
+--
+ALTER TABLE `users`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 -- --------------------------------------------------------
 
@@ -154,96 +202,11 @@ CREATE TABLE `vehicles` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `vehicles`
---
-
-INSERT INTO `vehicles` (`id`, `model_id`, `description`, `price`, `stock`, `image`, `created_at`, `is_featured`) VALUES
-(1, 1, 'Toyota Camry 2023, excelente estado', 25000.00, 7, 'Toyota-Camry-2025 (1).jpg', '2025-05-08 23:30:22', 1),
-(2, 2, 'Honda CR-V 2023, ideal para familias', 35000.00, 5, 'cr-v-2019-lhd-exterior-78.jpg', '2025-05-08 23:30:22', 1),
-(3, 3, 'Porsche 911 2023, máximo rendimiento', 120000.00, 3, 'Porsche 911.jpg', '2025-05-08 23:30:22', 1);
-
---
--- Indexes for dumped tables
---
-
---
--- Indexes for table `categories`
---
-ALTER TABLE `categories`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `messages`
---
-ALTER TABLE `messages`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `user_id` (`user_id`);
-
---
--- Indexes for table `models`
---
-ALTER TABLE `models`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `category_id` (`category_id`);
-
---
--- Indexes for table `sales`
---
-ALTER TABLE `sales`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `user_id` (`user_id`),
-  ADD KEY `vehicle_id` (`vehicle_id`);
-
---
--- Indexes for table `users`
---
-ALTER TABLE `users`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `username` (`username`),
-  ADD UNIQUE KEY `email` (`email`),
-  ADD UNIQUE KEY `unique_username` (`username`),
-  ADD UNIQUE KEY `unique_email` (`email`);
-
---
 -- Indexes for table `vehicles`
 --
 ALTER TABLE `vehicles`
   ADD PRIMARY KEY (`id`),
   ADD KEY `model_id` (`model_id`);
-
---
--- AUTO_INCREMENT for dumped tables
---
-
---
--- AUTO_INCREMENT for table `categories`
---
-ALTER TABLE `categories`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
-
---
--- AUTO_INCREMENT for table `messages`
---
-ALTER TABLE `messages`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
-
---
--- AUTO_INCREMENT for table `models`
---
-ALTER TABLE `models`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
-
---
--- AUTO_INCREMENT for table `sales`
---
-ALTER TABLE `sales`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
-
---
--- AUTO_INCREMENT for table `users`
---
-ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `vehicles`
@@ -265,7 +228,8 @@ ALTER TABLE `messages`
 -- Constraints for table `models`
 --
 ALTER TABLE `models`
-  ADD CONSTRAINT `models_ibfk_1` FOREIGN KEY (`category_id`) REFERENCES `categories` (`id`);
+  ADD CONSTRAINT `models_ibfk_1` FOREIGN KEY (`brand_id`) REFERENCES `brands` (`id`),
+  ADD CONSTRAINT `models_ibfk_2` FOREIGN KEY (`category_id`) REFERENCES `categories` (`id`);
 
 --
 -- Constraints for table `sales`
@@ -279,6 +243,53 @@ ALTER TABLE `sales`
 --
 ALTER TABLE `vehicles`
   ADD CONSTRAINT `vehicles_ibfk_1` FOREIGN KEY (`model_id`) REFERENCES `models` (`id`);
+
+--
+-- Insertar datos migrados
+--
+
+-- Insertar marcas en la tabla `brands`
+INSERT INTO `brands` (`id`, `name`) VALUES
+(1, 'Toyota'),
+(2, 'Honda'),
+(3, 'Porsche');
+
+-- Insertar categorías en la tabla `categories`
+INSERT INTO `categories` (`id`, `name`) VALUES
+(1, 'Sedán'),
+(2, 'SUV'),
+(3, 'Deportivo');
+
+-- Insertar modelos en la tabla `models` (ajustados para incluir brand_id y solo el nombre del modelo)
+INSERT INTO `models` (`id`, `brand_id`, `name`, `category_id`) VALUES
+(1, 1, 'Camry', 1),  -- Toyota Camry
+(2, 2, 'CR-V', 2),   -- Honda CR-V
+(3, 3, '911', 3);    -- Porsche 911
+
+-- Insertar usuarios en la tabla `users`
+INSERT INTO `users` (`id`, `username`, `email`, `password`, `first_name`, `last_name`, `image`, `role`, `created_at`) VALUES
+(4, 'jaestradag', 'jaestradag@gmail.com', '$2y$10$Q5DaZgmoYxAgO9dUX2r49ufTtzWyD6t3Nig2vlr1OcB2ryf3e94DS', 'Javier', 'Estrada', 'man.png', 'admin', '2025-05-08 23:45:57');
+
+-- Insertar vehículos en la tabla `vehicles`
+INSERT INTO `vehicles` (`id`, `model_id`, `description`, `price`, `stock`, `image`, `created_at`, `is_featured`) VALUES
+(1, 1, 'Toyota Camry 2023, excelente estado', 25000.00, 7, 'Toyota-Camry-2025 (1).jpg', '2025-05-08 23:30:22', 1),
+(2, 2, 'Honda CR-V 2023, ideal para familias', 35000.00, 5, 'cr-v-2019-lhd-exterior-78.jpg', '2025-05-08 23:30:22', 1),
+(3, 3, 'Porsche 911 2023, máximo rendimiento', 120000.00, 3, 'Porsche 911.jpg', '2025-05-08 23:30:22', 1);
+
+-- Insertar ventas en la tabla `sales`
+INSERT INTO `sales` (`id`, `user_id`, `vehicle_id`, `quantity`, `total_price`, `sale_date`) VALUES
+(1, 4, 2, 1, 35000.00, '2025-05-08 23:46:10'),
+(2, 4, 2, 1, 35000.00, '2025-05-09 00:03:14'),
+(3, 4, 1, 1, 25000.00, '2025-05-09 01:23:49'),
+(4, 4, 1, 1, 25000.00, '2025-05-09 02:39:33'),
+(5, 4, 1, 1, 25000.00, '2025-05-09 02:51:03'),
+(6, 4, 2, 1, 35000.00, '2025-05-09 03:20:34');
+
+-- Insertar mensajes en la tabla `messages`
+INSERT INTO `messages` (`id`, `user_id`, `subject`, `message`, `created_at`) VALUES
+(1, NULL, 'prueba', 'mensaje', '2025-05-09 00:53:04'),
+(2, 4, 'pruebaprueba', 'pruebaprueba', '2025-05-09 03:21:34');
+
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
