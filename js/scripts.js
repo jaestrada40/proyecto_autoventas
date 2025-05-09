@@ -130,10 +130,11 @@ document.addEventListener("DOMContentLoaded", () => {
           const item = document.createElement("div");
           item.className = "brand-slider-item";
           item.innerHTML = `
-            <img src="${BASE_URL}images/${vehicle.image}" alt="${vehicle.model_name}">
+            <a href="${BASE_URL}vehicle.php?vehicle_id=${vehicle.id}">
+              <img src="${BASE_URL}images/${vehicle.image}" alt="${vehicle.model_name}" class="w-full h-200px object-cover rounded-lg cursor-pointer transition-transform duration-300 hover:scale-105">
+            </a>
             <div class="brand-slider-caption">
-              <h2>${vehicle.brand_name} ${vehicle.model_name}</h2>
-              <a href="${BASE_URL}cart.php?vehicle_id=${vehicle.id}" class="button mt-2 inline-block">Comprar</a>
+              <h2 class="text-1.2rem font-semibold mt-2">${vehicle.brand_name} ${vehicle.model_name}</h2>
             </div>
           `;
           brandSlider.appendChild(item);

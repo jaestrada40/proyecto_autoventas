@@ -65,10 +65,11 @@ $featured_vehicles = $featured->fetchAll();
         <div class="brand-slider">
             <?php foreach ($vehicles as $vehicle): ?>
                 <div class="brand-slider-item">
-                    <img src="<?php echo BASE_URL; ?>images/<?php echo $vehicle['image']; ?>" alt="<?php echo $vehicle['model_name']; ?>">
+                    <a href="<?php echo BASE_URL; ?>vehicle.php?vehicle_id=<?php echo $vehicle['id']; ?>">
+                        <img src="<?php echo BASE_URL; ?>images/<?php echo $vehicle['image']; ?>" alt="<?php echo $vehicle['model_name']; ?>" class="w-full h-200px object-cover rounded-lg cursor-pointer transition-transform duration-300 hover:scale-105">
+                    </a>
                     <div class="brand-slider-caption">
-                        <h2><?php echo $vehicle['brand_name'] . ' ' . $vehicle['model_name']; ?></h2>
-                        <a href="<?php echo BASE_URL; ?>cart.php?vehicle_id=<?php echo $vehicle['id']; ?>" class="button mt-2 inline-block">Comprar</a>
+                        <h2 class="text-1.2rem font-semibold mt-2"><?php echo $vehicle['brand_name'] . ' ' . $vehicle['model_name']; ?></h2>
                     </div>
                 </div>
             <?php endforeach; ?>
@@ -92,4 +93,3 @@ $featured_vehicles = $featured->fetchAll();
     const BASE_URL = '<?php echo BASE_URL; ?>';
     const allVehicles = <?php echo json_encode($vehicles); ?>;
 </script>
-<script src="js/scripts.js"></script>
