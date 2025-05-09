@@ -4,26 +4,8 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 require_once 'functions.php';
-
-// Obtener datos del usuario para la barra lateral
-if (isset($_SESSION['user_id'])) {
-    global $pdo;
-    $stmt = $pdo->prepare("SELECT first_name, last_name, image FROM users WHERE id = ?");
-    $stmt->execute([$_SESSION['user_id']]);
-    $user = $stmt->fetch();
-    $_SESSION['first_name'] = $user['first_name'] ?? '';
-    $_SESSION['last_name'] = $user['last_name'] ?? '';
-    $_SESSION['image'] = $user['image'] ?? 'default-user.png';
-}
-
-// Calcular el conteo del carrito desde $_SESSION['cart']
-$_SESSION['cart_count'] = 0;
-if (isset($_SESSION['cart']) && is_array($_SESSION['cart'])) {
-    foreach ($_SESSION['cart'] as $item) {
-        $_SESSION['cart_count'] += $item['quantity'];
-    }
-}
 ?>
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -52,7 +34,7 @@ if (isset($_SESSION['cart']) && is_array($_SESSION['cart'])) {
                 <a href="<?php echo BASE_URL; ?>cart.php" id="cart-icon">
                     <i class="fas fa-shopping-cart text-white text-xl hover:text-yellow-500 transition-colors duration-300"></i>
                 </a>
-                <span class="cart-count absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center" id="cart-count"><?php echo $_SESSION['cart_count']; ?></span>
+                <span class="cart-count absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center" id="cart-count"><?php echo isset($_SESSION['cart_count']) ? $_SESSION['cart_count'] : 0; ?></span>
             </div>
             <div class="navbar-user">
                 <img src="<?php echo BASE_URL; ?>images/<?php echo htmlspecialchars($_SESSION['image'] ?? 'default-user.png'); ?>" alt="Usuario" class="w-9 h-9 rounded-full user-toggle">
@@ -101,7 +83,8 @@ if (isset($_SESSION['cart']) && is_array($_SESSION['cart'])) {
                 <form id="register-form" method="POST" class="space-y-4">
                     <input type="text" name="username" placeholder="Usuario" class="border p-2 rounded w-full" required>
                     <input type="email" name="email" placeholder="Correo" class="border p-2 rounded w-full" required>
-                    <input type="text" name="name" placeholder="Nombre" class="border p-2 rounded w-full" required>
+                    <input type="text" name="first_name" placeholder="Nombre" class="border p-2 rounded w-full" required>
+                    <input type="text" name="last_name" placeholder="Apellido" class="border p-2 rounded w-full" required>
                     <input type="password" name="password" placeholder="Contraseña" class="border p-2 rounded w-full" required>
                     <button type="submit" class="btn btn-add">Registrarse</button>
                 </form>
@@ -164,17 +147,32 @@ if (isset($_SESSION['cart']) && is_array($_SESSION['cart'])) {
         const formData = new FormData(e.target);
         const errorDiv = document.getElementById('login-error');
 
-        const response = await fetch('<?php echo BASE_URL; ?>login.php', {
-            method: 'POST',
-            body: formData
-        });
+        try {
+            const response = await fetch('<?php echo BASE_URL; ?>login.php', {
+                method: 'POST',
+                body: formData
+            });
 
-        const result = await response.json();
-        if (result.success) {
-            document.getElementById('auth-modal').style.display = 'none';
-            location.reload(); // Recargar la página para actualizar el estado de la sesión
-        } else {
-            errorDiv.textContent = result.error || 'Credenciales incorrectas';
+            const text = await response.text();
+            console.log('Respuesta del servidor (login):', text);
+
+            let result;
+            try {
+                result = JSON.parse(text);
+            } catch (parseError) {
+                throw new Error('Respuesta no es JSON válido: ' + text);
+            }
+
+            if (result.success) {
+                document.getElementById('auth-modal').style.display = 'none';
+                location.reload(); // Recargar la página para actualizar el estado de la sesión
+            } else {
+                errorDiv.textContent = result.error || 'Credenciales incorrectas';
+                errorDiv.classList.remove('hidden');
+            }
+        } catch (error) {
+            console.error('Error en la solicitud (login):', error);
+            errorDiv.textContent = 'Error en la solicitud: ' + error.message;
             errorDiv.classList.remove('hidden');
         }
     });
@@ -185,18 +183,33 @@ if (isset($_SESSION['cart']) && is_array($_SESSION['cart'])) {
         const formData = new FormData(e.target);
         const errorDiv = document.getElementById('register-error');
 
-        const response = await fetch('<?php echo BASE_URL; ?>register.php', {
-            method: 'POST',
-            body: formData
-        });
+        try {
+            const response = await fetch('<?php echo BASE_URL; ?>register.php', {
+                method: 'POST',
+                body: formData
+            });
 
-        const result = await response.json();
-        if (result.success) {
-            document.getElementById('auth-modal').style.display = 'none';
-            document.querySelector('.tab-button[data-tab="login"]').click(); // Cambiar a la pestaña de login
-            document.getElementById('auth-modal').style.display = 'flex'; // Mostrar el modal de nuevo
-        } else {
-            errorDiv.textContent = result.error || 'Error al registrarse';
+            const text = await response.text();
+            console.log('Respuesta del servidor (register):', text);
+
+            let result;
+            try {
+                result = JSON.parse(text);
+            } catch (parseError) {
+                throw new Error('Respuesta no es JSON válido: ' + text);
+            }
+
+            if (result.success) {
+                document.getElementById('auth-modal').style.display = 'none';
+                document.querySelector('.tab-button[data-tab="login"]').click(); // Cambiar a la pestaña de login
+                document.getElementById('auth-modal').style.display = 'flex'; // Mostrar el modal de nuevo
+            } else {
+                errorDiv.textContent = result.error || 'Error al registrarse';
+                errorDiv.classList.remove('hidden');
+            }
+        } catch (error) {
+            console.error('Error en la solicitud (register):', error);
+            errorDiv.textContent = 'Error en la solicitud: ' + error.message;
             errorDiv.classList.remove('hidden');
         }
     });

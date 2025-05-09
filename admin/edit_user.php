@@ -53,20 +53,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 ?>
 
-<div class="sidebar">
-    <div class="user-profile mb-6 text-center">
-        <img src="<?php echo BASE_URL; ?>images/<?php echo htmlspecialchars($_SESSION['image'] ?? 'default-user.png'); ?>" alt="Usuario" class="w-24 h-24 rounded-full mx-auto mb-2 shadow-md">
-        <h3 class="text-lg font-semibold"><?php echo htmlspecialchars(($_SESSION['first_name'] ?? '') . ' ' . ($_SESSION['last_name'] ?? '')); ?></h3>
-    </div>
-    <h2 class="text-xl font-bold mb-4">Panel de Administración</h2>
-    <a href="<?php echo BASE_URL; ?>admin/dashboard.php">Dashboard</a>
-    <a href="<?php echo BASE_URL; ?>admin/users.php">Usuarios</a>
-    <a href="<?php echo BASE_URL; ?>admin/vehicles.php">Vehículos</a>
-    <a href="<?php echo BASE_URL; ?>admin/categories.php">Categorías</a>
-    <a href="<?php echo BASE_URL; ?>admin/models.php">Modelos</a>
-    <a href="<?php echo BASE_URL; ?>admin/messages.php">Mensajes</a>
-    <a href="<?php echo BASE_URL; ?>admin/logout.php">Cerrar Sesión</a>
-</div>
+
 
 <div class="main-content">
     <h1 class="text-3xl font-bold mb-6 text-1E40AF">Editar Usuario</h1>

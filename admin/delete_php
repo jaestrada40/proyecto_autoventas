@@ -1,0 +1,17 @@
+<?php
+require_once '../includes/db.php';
+require_once '../includes/functions.php';
+
+if (!isset($_SESSION['user_id']) || !isAdmin()) {
+    redirect('../login.php');
+}
+
+if (isset($_GET['id'])) {
+    $id = $_GET['id'];
+    $stmt = $pdo->prepare("DELETE FROM brands WHERE id = ?");
+    $stmt->execute([$id]);
+}
+
+header("Location: brands.php");
+exit;
+?>

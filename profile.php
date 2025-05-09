@@ -31,13 +31,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     redirect('profile.php');
 }
 
-// Consulta segura para las ventas
-$stmt = $pdo->prepare("SELECT s.*, v.*, m.name AS model_name 
-                       FROM sales s 
-                       JOIN vehicles v ON s.vehicle_id = v.id 
-                       JOIN models m ON v.model_id = m.id 
-                       WHERE s.user_id = ?");
+// Paginación
+$items_per_page = 10;
+$page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+$offset = ($page - 1) * $items_per_page;
+
+// Contar el total de ventas para paginación
+$stmt = $pdo->prepare("SELECT COUNT(*) FROM sales WHERE user_id = ?");
 $stmt->execute([$user_id]);
+$total_sales = $stmt->fetchColumn();
+$total_pages = ceil($total_sales / $items_per_page);
+
+// Consulta de ventas con paginación
+$query = "SELECT s.*, v.*, m.name AS model_name, b.name AS brand_name 
+          FROM sales s 
+          JOIN vehicles v ON s.vehicle_id = v.id 
+          JOIN models m ON v.model_id = m.id 
+          JOIN brands b ON m.brand_id = b.id 
+          WHERE s.user_id = ? 
+          LIMIT ? OFFSET ?";
+$stmt = $pdo->prepare($query);
+$stmt->bindValue(1, $user_id, PDO::PARAM_INT);
+$stmt->bindValue(2, $items_per_page, PDO::PARAM_INT);
+$stmt->bindValue(3, $offset, PDO::PARAM_INT);
+$stmt->execute();
 $sales = $stmt->fetchAll();
 ?>
 
@@ -62,6 +79,7 @@ $sales = $stmt->fetchAll();
         <table>
             <thead>
                 <tr>
+                    <th>Marca</th>
                     <th>Modelo</th>
                     <th>Precio</th>
                     <th>Cantidad</th>
@@ -70,17 +88,43 @@ $sales = $stmt->fetchAll();
                 </tr>
             </thead>
             <tbody>
-                <?php foreach ($sales as $sale): ?>
+                <?php if (empty($sales)): ?>
                     <tr>
-                        <td><?php echo htmlspecialchars($sale['model_name']); ?></td>
-                        <td>$<?php echo number_format($sale['total_price'] / $sale['quantity'], 2); ?></td>
-                        <td><?php echo $sale['quantity']; ?></td>
-                        <td>$<?php echo number_format($sale['total_price'], 2); ?></td>
-                        <td><?php echo $sale['sale_date']; ?></td>
+                        <td colspan="6" class="text-center">No tienes compras registradas.</td>
                     </tr>
-                <?php endforeach; ?>
+                <?php else: ?>
+                    <?php foreach ($sales as $sale): ?>
+                        <tr>
+                            <td><?php echo htmlspecialchars($sale['brand_name']); ?></td>
+                            <td><?php echo htmlspecialchars($sale['model_name']); ?></td>
+                            <td>$<?php echo number_format($sale['total_price'] / $sale['quantity'], 2); ?></td>
+                            <td><?php echo $sale['quantity']; ?></td>
+                            <td>$<?php echo number_format($sale['total_price'], 2); ?></td>
+                            <td><?php echo $sale['sale_date']; ?></td>
+                        </tr>
+                    <?php endforeach; ?>
+                <?php endif; ?>
             </tbody>
         </table>
+
+        <!-- Paginación -->
+        <?php if ($total_pages > 1): ?>
+            <div class="pagination mt-4 flex justify-center gap-2">
+                <?php if ($page > 1): ?>
+                    <a href="profile.php?page=<?php echo $page - 1; ?>" class="btn btn-search">Anterior</a>
+                <?php endif; ?>
+
+                <?php for ($i = 1; $i <= $total_pages; $i++): ?>
+                    <a href="profile.php?page=<?php echo $i; ?>" class="btn <?php echo $i === $page ? 'btn-add' : 'btn-search'; ?>">
+                        <?php echo $i; ?>
+                    </a>
+                <?php endfor; ?>
+
+                <?php if ($page < $total_pages): ?>
+                    <a href="profile.php?page=<?php echo $page + 1; ?>" class="btn btn-search">Siguiente</a>
+                <?php endif; ?>
+            </div>
+        <?php endif; ?>
     </div>
 </div>
 

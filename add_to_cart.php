@@ -36,8 +36,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $found = false;
     foreach ($_SESSION['cart'] as &$item) {
         if ($item['vehicle_id'] == $vehicle_id) {
-            $item['quantity'] += $quantity;
-            $item['total_price'] = $vehicle['price'] * $item['quantity'];
+            $item['quantity'] = $quantity;
+            $item['total_price'] = $vehicle['price'] * $quantity;
             $found = true;
             break;
         }
