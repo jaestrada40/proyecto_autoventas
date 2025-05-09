@@ -1,6 +1,6 @@
 # 🚗 Proyecto Autoventas
 
-Este proyecto es una plataforma de gestión de ventas de autos, desarrollada para administrar vehículos, usuarios y ventas de forma eficiente. Está construida con [mencionar tecnologías si quieres, como PHP, MySQL, etc.].
+Este proyecto es una plataforma de gestión de ventas de autos, desarrollada para administrar vehículos, usuarios y ventas de forma eficiente. Está construida con PHP, MySQL, etc.].
 
 ---
 
