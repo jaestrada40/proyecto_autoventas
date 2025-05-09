@@ -16,7 +16,7 @@ CREATE DATABASE car_dealership
 
 🔐 Credenciales de Administrador
 👤 Usuario: jaestradag
-🔑 Contraseña: abc123
+🔑 Contraseña: 123456
 Usa estas credenciales para iniciar sesión como administrador en la plataforma.
 
 ▶️ Cómo Ejecutar
