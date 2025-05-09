@@ -25,3 +25,59 @@ Copia el repositorio dentro de la carpeta htdocs (o equivalente).
 
 Abre tu navegador en:
 http://localhost/proyecto_autoventas
+
+
+📁 Estructura del Proyecto
+car_dealership
+├── README.md
+├── about.php
+├── add_to_cart.php
+├── admin
+│   ├── add_user.php
+│   ├── admin_sidebar.php
+│   ├── categories.php
+│   ├── dashboard.php
+│   ├── delete_category.php
+│   ├── delete_model.php
+│   ├── delete_user.php
+│   ├── delete_vehicle.php
+│   ├── edit_category.php
+│   ├── edit_model.php
+│   ├── edit_user.php
+│   ├── edit_vehicle.php
+│   ├── index.php
+│   ├── logout.php
+│   ├── messages.php
+│   ├── models.php
+│   ├── users.php
+│   └── vehicles.php
+├── buy_vehicle.php
+├── car_dealership.sql
+├── cart.php
+├── categories.php
+├── contact.php
+├── css
+│   └── styles.css
+├── images
+│   ├── Porsche 911.jpg
+│   ├── Toyota-Camry-2025 (1).jpg
+│   ├── cr-v-2019-lhd-exterior-78.jpg
+│   ├── default-user.png
+│   ├── logo.png
+│   ├── man.png
+│   └── toyota-camry-2025.jpg
+├── includes
+│   ├── admin_sidebar.php
+│   ├── db.php
+│   ├── footer.php
+│   ├── functions.php
+│   └── header.php
+├── index.php
+├── js
+│   └── scripts.js
+├── login.php
+├── logout.php
+├── profile.php
+├── register.php
+├── search.php
+└── vehicle_detail.php
