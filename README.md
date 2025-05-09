@@ -19,6 +19,12 @@ CREATE DATABASE car_dealership
 🔑 Contraseña: 123456
 Usa estas credenciales para iniciar sesión como administrador en la plataforma.
 
+
+🔐 Credenciales de Cliente
+👤 Usuario: cliente
+🔑 Contraseña: 123456
+Usa estas credenciales para iniciar sesión como administrador en la plataforma.
+
 ▶️ Cómo Ejecutar
 Asegúrate de tener un servidor local (XAMPP, MAMP o similar).
 Copia el repositorio dentro de la carpeta htdocs (o equivalente).
@@ -81,3 +87,4 @@ car_dealership
 ├── register.php
 ├── search.php
 └── vehicle_detail.php
+```
