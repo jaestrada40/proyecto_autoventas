@@ -15,45 +15,32 @@ $stmt_vehicles = $pdo->query("SELECT v.*, m.name AS model_name, b.name AS brand_
                              JOIN categories c ON m.category_id = c.id 
                              ORDER BY v.created_at DESC");
 $vehicles = $stmt_vehicles->fetchAll();
-
-// Obtener vehículos destacados (para el slider existente)
-$featured = $pdo->query("SELECT v.*, m.name AS model_name 
-                         FROM vehicles v 
-                         JOIN models m ON v.model_id = m.id 
-                         WHERE v.is_featured = TRUE");
-$featured_vehicles = $featured->fetchAll();
 ?>
 
-<div class="container mx-auto py-12">
-    <!-- Slider Existente (Destacados) -->
-    <?php if ($featured_vehicles): ?>
-        <div class="slider-container">
-            <div class="slider">
-                <?php foreach ($featured_vehicles as $vehicle): ?>
-                    <div class="slider-item">
-                        <img src="<?php echo BASE_URL; ?>images/<?php echo $vehicle['image']; ?>" alt="<?php echo $vehicle['model_name']; ?>">
-                        <div class="slider-caption">
-                            <h2><?php echo $vehicle['model_name']; ?></h2>
-                            <p>$<?php echo number_format($vehicle['price'], 2); ?> - <?php echo substr($vehicle['description'], 0, 100); ?>...</p>
-                            <a href="<?php echo BASE_URL; ?>cart.php?vehicle_id=<?php echo $vehicle['id']; ?>" class="button mt-2 inline-block">Comprar Ahora</a>
-                        </div>
-                    </div>
-                <?php endforeach; ?>
-            </div>
-            <div class="slider-nav">
-                <button class="prev">❮</button>
-                <button class="next">❯</button>
-            </div>
-            <div class="slider-dots">
-                <?php foreach ($featured_vehicles as $index => $vehicle): ?>
-                    <span class="slider-dot <?php echo $index === 0 ? 'active' : ''; ?>"></span>
-                <?php endforeach; ?>
-            </div>
+<!-- Hero Video con botón de precalificación -->
+<div class="w-full">
+    <div class="hero-video-container relative w-full h-[500px] overflow-hidden shadow-lg">
+        <video autoplay muted loop playsinline class="w-full h-full object-cover">
+            <source src="<?php echo BASE_URL; ?>images/hero.mp4" type="video/mp4">
+            Tu navegador no soporta videos HTML5.
+        </video>
+        <div class="absolute inset-0 bg-black bg-opacity-40 flex flex-col items-center justify-center text-white text-center px-4">
+            <h1 class="text-4xl md:text-5xl font-extrabold mb-4 drop-shadow-lg">Autos MONTGOMERY</h1>
+            <p class="text-xl mb-6 drop-shadow-md">Donde comienza tu próxima aventura</p>
+            <button onclick="abrirPrecalificacion()" class="relative px-6 py-3 bg-white text-blue-700 font-bold rounded-full text-lg shadow-lg hover:bg-orange-500 hover:text-white transition">
+                Precalificá tu crédito
+                <span class="absolute inset-0 rounded-full border-4 border-orange-400 animate-ping-slow"></span>
+            </button>
         </div>
-    <?php endif; ?>
+    </div>
+</div>
+
+<!-- Contenido principal -->
+<div class="container mx-auto py-12" id="catalogo">
 
     <!-- Menú de marcas y nuevo slider -->
     <h1 class="text-4xl font-bold text-center text-1E40AF my-12">Bienvenido a Autos MONTGOMERY</h1>
+    
     <div class="brand-menu text-center mb-8">
         <a href="#" class="brand-filter active" data-brand="">Todas las marcas</a>
         <?php foreach ($brands as $brand): ?>
@@ -86,10 +73,57 @@ $featured_vehicles = $featured->fetchAll();
     </div>
 </div>
 
+<!-- Modal de Precalificación -->
+<div id="modalPrecalificacion" class="modal fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-[9999] hidden">
+  <div class="bg-white p-8 rounded-xl shadow-lg w-full max-w-md relative">
+    <button onclick="cerrarPrecalificacion()" class="absolute top-3 right-3 text-gray-500 hover:text-red-500 text-2xl">&times;</button>
+    <h2 class="text-2xl font-bold text-blue-800 mb-4">Precalificá para Crédito</h2>
+    <form onsubmit="enviarPrecalificacion(event)">
+      <div class="mb-4">
+        <label class="block text-sm font-medium mb-1">Nombre completo</label>
+        <input type="text" class="w-full border border-gray-300 rounded-md px-3 py-2" required>
+      </div>
+      <div class="mb-4">
+        <label class="block text-sm font-medium mb-1">Número de DPI</label>
+        <input type="text" class="w-full border border-gray-300 rounded-md px-3 py-2" required>
+      </div>
+      <div class="mb-4">
+        <label class="block text-sm font-medium mb-1">Ingresos mensuales (Q)</label>
+        <input type="number" class="w-full border border-gray-300 rounded-md px-3 py-2" required>
+      </div>
+      <div class="mb-6">
+        <label class="block text-sm font-medium mb-1">Celular</label>
+        <input type="tel" class="w-full border border-gray-300 rounded-md px-3 py-2" required>
+      </div>
+      <button type="submit" class="w-full bg-blue-700 text-white font-semibold py-2 rounded-md hover:bg-blue-800 transition">
+        Enviar solicitud
+      </button>
+    </form>
+  </div>
+</div>
+
 <?php include 'includes/footer.php'; ?>
 
 <script>
-    // Pasar BASE_URL y los vehículos como variables JavaScript
     const BASE_URL = '<?php echo BASE_URL; ?>';
     const allVehicles = <?php echo json_encode($vehicles); ?>;
+
+    function abrirPrecalificacion() {
+        document.getElementById("modalPrecalificacion").classList.remove("hidden");
+    }
+
+    function cerrarPrecalificacion() {
+        document.getElementById("modalPrecalificacion").classList.add("hidden");
+    }
+
+    function enviarPrecalificacion(event) {
+        event.preventDefault();
+        cerrarPrecalificacion();
+        Swal.fire({
+            icon: 'success',
+            title: '¡Gracias!',
+            text: 'Tu solicitud de precalificación fue enviada con éxito.',
+            confirmButtonColor: '#1e40af'
+        });
+    }
 </script>
