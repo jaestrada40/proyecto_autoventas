@@ -19,7 +19,7 @@ require_once 'functions.php';
     <script src="<?php echo BASE_URL; ?>js/scripts.js" defer></script>
 </head>
 <body>
-    <nav class="navbar">
+<nav id="mainHeader" class="navbar transition-all duration-300">
         <div class="navbar-logo">
             <img src="<?php echo BASE_URL; ?>images/logo.png" alt="Logo">
         </div>
